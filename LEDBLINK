@@ -1,0 +1,26 @@
+// blinking an LED
+
+#include <xc.h> // Include the general XC8 header
+
+// Configuration bits
+#pragma config FOSC = INTOSCIO    // High-speed oscillator
+#pragma config WDTEN = OFF        // Watchdog Timer disabled
+#pragma config LVP = ON        // Low-Voltage Programming disabled
+
+#define _XTAL_FREQ 48000000    // Define the system frequency for delay
+
+void main(void) {
+    // Disable analog inputs on PORTB
+    ANSELB = 0; // Set all PORTB pins as digital
+
+    // Set RB0 as output
+    TRISBbits.TRISB0 = 0; // Set RB0 as output
+
+    while (1) {
+        LATBbits.LATB0 = 1; // Turn on the LED (RB0 high)
+        __delay_ms(1000);    // Delay for 500 milliseconds
+
+        LATBbits.LATB0 = 0; // Turn off the LED (RB0 low)
+        __delay_ms(1000);    // Delay for 500 milliseconds
+    }
+}
