@@ -1,3 +1,13 @@
+/*This program for a PIC18F45K50 uC (using the XC8 compiler) configures and toggles an LED connected
+* to pin RB0 of PORTB with a 1-second interval. It starts by disabling all analog functionality on PORTB by
+* setting ANSELB = 0, ensuring the pins are used for digital I/O. The TRISBbits.TRISB0 = 0 line sets RB0 as
+* an output pin. Inside the infinite while(1) loop, LATBbits.LATB0 = 1 sets the Latch register for RB0 high,
+* turning the LED on by applying a logic high to the pin. The __delay_ms(1000) function creates a 1-second
+* delay, after which LATBbits.LATB0 = 0 drives the latch low, turning the LED off. This process repeats,
+* causing the LED to blink on and off every second. The use of LATBbits.LATB0 ensures proper and safe write
+* operations to the output latch register, rather than reading-modifying-writing the port directly, which is
+* important in avoiding glitches due to port read/write conflicts.
+*/
 // blinking an LED
 
 #include <xc.h> // Include the general XC8 header
