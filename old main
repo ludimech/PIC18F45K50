@@ -1,0 +1,36 @@
+#include <xc.h>
+#include "display.h"
+#include "config.h"
+#include "globals.h"
+#include "LEDS.h"
+
+#define _XTAL_FREQ 48000000
+
+void main(void) {
+    // Disable analog inputs
+    ANSELA = ANSELB = ANSELD = ANSELE = 0;
+    // Set RA6 and RA7 as inputs (they are automatically configured by the oscillator)
+    TRISAbits.TRISA6 = 1; // RA6 (OSC1) as input
+    TRISAbits.TRISA7 = 1; // RA7 (OSC2) as input
+    
+    // Call the LED control function
+    ControlLED(); // This will enter an infinite loop controlling the LED
+    
+    // Set segment pins as output
+    TRISA &= ~0x3F; // RA0?RA5
+    TRISE &= ~0x03; // RE0?RE1
+
+    // Set digit select pins as output
+    TRISD &= ~0xF0; // RD4?RD7
+    TRISB &= ~0x3C; // RB2?RB5
+
+    // Initialize all digit pins high (inactive)
+    ClearDigits();
+
+    // Main loop to multiplex 8 digits
+    while(1) {
+        for (unsigned char i = 0; i < 8; i++) {
+            DisplayNum(display_digits[i], i + 1, (i == posn)); // DP on digit 2
+        }
+    }
+}
